@@ -1,0 +1,3 @@
+tasks:
+  - name: Run News Extraction
+    robot: main.py
