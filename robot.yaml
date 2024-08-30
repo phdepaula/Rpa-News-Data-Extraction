@@ -1,14 +1,13 @@
 tasks:
-  Run Task:
+  News Data Extraction:
     shell: python main.py
-  Oi Task:
-    shell: python oi.py
 
 environmentConfigs:
+  - conda.yaml
   - environment_windows_amd64_freeze.yaml
   - environment_linux_amd64_freeze.yaml
   - environment_darwin_amd64_freeze.yaml
-  - conda.yaml
+  
 
 artifactsDir: output
 
