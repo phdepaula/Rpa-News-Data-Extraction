@@ -48,7 +48,7 @@ class TaskNewsDataExtraction(Task):
         """
         self.__selenium_handler.open_browser()
 
-    def _opening_search_bar(self) -> None:
+    def _open_search_bar(self) -> None:
         """
         Method responsible for opening
         the search bar.
@@ -93,7 +93,7 @@ class TaskNewsDataExtraction(Task):
             self.wait_for_page_to_load(5)
             self._close_advertisement()
             self.wait_for_page_to_load(3)
-            self._opening_search_bar()
+            self._open_search_bar()
             self.wait_for_page_to_load(3)
             self._searching_phrase()
             self.wait_for_page_to_load(3)
