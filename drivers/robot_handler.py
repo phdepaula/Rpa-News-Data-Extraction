@@ -1,6 +1,6 @@
 from typing import Dict, List
 
-from RPA.Robocloud.Items import RobocloudItems
+from RPA.Robocorp.WorkItems import WorkItems
 
 from util.error_manager import ErrorManager
 
@@ -13,23 +13,24 @@ class RobotHandler:
 
     def __init__(self, robot_keys: List) -> None:
         self.robot_keys = robot_keys
+        self.work_items = WorkItems()
 
-    def _get_all_robot_items(self) -> RobocloudItems:
+    def _get_input_work_item(self) -> None:
         """
-        Method responsible for getting robot itens.
+        Method responsible for getting the robot's work items.
         """
-        return RobocloudItems()
+        self.work_items.get_input_work_item()
 
-    def _search_robot_work_items(self, robot_items: RobocloudItems) -> Dict:
+    def _search_robot_work_items(self) -> Dict:
         """
-        Method responsible for searching and get
-        work item value.
+        Method responsible for searching and getting
+        work item values.
         """
         work_items = {}
-        input_item = robot_items.get_input_work_item()
+        input_payload = self.work_items.get_work_item_payload()
 
         for key in self.robot_keys:
-            work_items[key] = input_item.payload.get(key, None)
+            work_items[key] = input_payload.get(key, None)
 
         return work_items
 
@@ -39,12 +40,12 @@ class RobotHandler:
         of all robot work items.
         """
         try:
-            robot_items = self._get_all_robot_items()
-            work_items = self._search_robot_work_items(robot_items)
+            self._get_input_work_item()
+            work_items = self._search_robot_work_items()
 
             return work_items
         except Exception as error:
-            message = f"Error getting robot work itens: {error}"
+            message = f"Error getting robot work items: {error}"
             error_code = 1
 
             raise ErrorManager(message, error_code)
