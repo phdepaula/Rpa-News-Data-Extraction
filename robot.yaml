@@ -1,6 +1,8 @@
 tasks:
   Run Task:
     shell: python main.py
+  Oi Task:
+    shell: python oi.py
 
 environmentConfigs:
   - environment_windows_amd64_freeze.yaml
