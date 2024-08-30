@@ -28,7 +28,10 @@ class TaskNewsDataExtraction(Task):
         if it appears
         """
         try:
-            close_icon_path = "/html/body/div[7]/div/div/a"
+            close_icon_path = (
+                "//div[@class='fancybox-overlay fancybox-overlay-fixed']"
+                + "//a[@title='Close' and @class='fancybox-item fancybox-close']"
+            )
             close_icon_element = self.__selenium_handler.find_element(
                 close_icon_path
             )
@@ -90,13 +93,15 @@ class TaskNewsDataExtraction(Task):
         """
         try:
             self._open_browser()
-            self.wait_for_page_to_load(5)
+            self.wait_for_page_to_load(2)
             self._close_advertisement()
-            self.wait_for_page_to_load(3)
+            self.wait_for_page_to_load(2)
             self._open_search_bar()
-            self.wait_for_page_to_load(3)
+            self.wait_for_page_to_load(2)
             self._searching_phrase()
-            self.wait_for_page_to_load(3)
+            self.wait_for_page_to_load(2)
+            self._close_advertisement()
+            self.wait_for_page_to_load(2)
             self._close_browser()
             self._update_results(["results"])
         except ErrorManager as error_manager:
