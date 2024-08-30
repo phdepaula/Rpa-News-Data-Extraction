@@ -1,6 +1,8 @@
 from drivers.robot_handler import RobotHandler
 from tasks.task import Task
 
+from util.error_manager import ErrorManager
+
 
 class TaskRobotWorkItems(Task):
     """
@@ -14,7 +16,15 @@ class TaskRobotWorkItems(Task):
         """
         Method responsible for executing task.
         """
-        robot_handler = RobotHandler(self.robot_keys)
-        work_items = robot_handler.get_robot_work_items()
+        try:
+            robot_handler = RobotHandler(self.robot_keys)
+            work_items = robot_handler.get_robot_work_items()
 
-        self._update_results(work_items)
+            self._update_results(work_items)
+        except ErrorManager as error_manager:
+            raise error_manager
+        except Exception as error:
+            message = f"Error executing task Robot Work Items: {error}"
+            error_code = 10
+
+            raise ErrorManager(message, error_code)
