@@ -53,6 +53,19 @@ class SeleniumHandler:
 
             raise ErrorManager(message, error_code)
 
+    def input_text(self, path: str, text: str) -> None:
+        """
+        Method responsible for inputing text in
+        a element.
+        """
+        try:
+            self.browser.input_text(path, text)
+        except Exception as error:
+            message = f"Error inputing text: {error}"
+            error_code = 5
+
+            raise ErrorManager(message, error_code)
+
     def open_browser(self) -> None:
         """
         Method responsible for opening the browser
@@ -62,6 +75,6 @@ class SeleniumHandler:
             self.browser.open_available_browser(self.url)
         except Exception as error:
             message = f"Error opening browser: {error}"
-            error_code = 5
+            error_code = 6
 
             raise ErrorManager(message, error_code)
