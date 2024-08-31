@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import Dict
 
 
 class Task(ABC):
@@ -8,7 +8,7 @@ class Task(ABC):
     """
 
     def __init__(self) -> None:
-        self.results = None
+        self.__results = {}
 
     @abstractmethod
     def execute_task(self) -> None:
@@ -16,5 +16,11 @@ class Task(ABC):
         Method responsible for executing task.
         """
 
-    def _update_results(self, results: Any) -> None:
-        self.results = results
+    def get_results(self) -> Dict:
+        """
+        Method responsible getting all results.
+        """
+        return self.__results
+
+    def _update_results(self, results: Dict) -> None:
+        self.__results.update(results)
