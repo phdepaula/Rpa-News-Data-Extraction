@@ -14,7 +14,6 @@ class TaskNewsDataExtraction(Task):
     """
 
     SEARCH_PHRASE = "search_phrase"
-    FILTER = "filter"
     SORT_BY = "sort_by"
 
     def __init__(self, input_data: Dict) -> None:
@@ -64,7 +63,17 @@ class TaskNewsDataExtraction(Task):
         loupe_element = self.__selenium_handler.find_element(loupe_path)
         self.__selenium_handler.click_element(loupe_element)
 
-    def wait_for_page_to_load(self, seconds: int) -> None:
+    def _sort_news(self) -> None:
+        """
+        Method responsible for sorting news
+        based on value provided.
+        """
+        path = """//*[@id="search-sort-option"]"""
+        sort_by = self.input_data.get(self.SORT_BY, "").lower()
+
+        self.__selenium_handler.select_option(path, sort_by)
+
+    def _wait_for_page_to_load(self, seconds: int) -> None:
         """
         Method responsible for waiting page to load.
         """
@@ -76,11 +85,13 @@ class TaskNewsDataExtraction(Task):
         """
         try:
             self._open_browser()
-            self.wait_for_page_to_load(2)
+            self._wait_for_page_to_load(2)
             self._open_search_bar()
-            self.wait_for_page_to_load(2)
+            self._wait_for_page_to_load(2)
             self._searching_phrase()
-            self.wait_for_page_to_load(2)
+            self._wait_for_page_to_load(2)
+            self._sort_news()
+            self._wait_for_page_to_load(2)
             self._close_browser()
             self._update_results(["results"])
         except ErrorManager as error_manager:
