@@ -25,6 +25,6 @@ class TaskRobotWorkItems(Task):
             raise error_manager
         except Exception as error:
             message = f"Error executing task Robot Work Items: {error}"
-            error_code = 10
+            error_code = 20
 
             raise ErrorManager(message, error_code)
