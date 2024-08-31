@@ -1,3 +1,5 @@
+from typing import Any, List
+
 from RPA.Browser.Selenium import Selenium
 from selenium.webdriver.remote.webelement import WebElement
 
@@ -44,12 +46,55 @@ class SeleniumHandler:
         Method responsible for finding an element.
         """
         try:
-            element = self.browser.find_element(path)
-
-            return element
+            return self.browser.find_element(path)
         except Exception as error:
             message = f"Error finding element: {error}"
             error_code = 4
+
+            raise ErrorManager(message, error_code)
+
+    def find_elements(self, path: str) -> List[WebElement]:
+        """
+        Method responsible for finding all elements
+        inside one path.
+        """
+        try:
+            return self.browser.find_elements(path)
+        except Exception as error:
+            message = f"Error finding elements: {error}"
+            error_code = 5
+
+            raise ErrorManager(message, error_code)
+
+    def get_element_attribute(self, path: str, name: str) -> str:
+        """
+        Method responsible for getting an element attribute
+        """
+        try:
+            element = self.find_element(path)
+
+            return element.get_attribute(name)
+        except ErrorManager:
+            return ""
+        except Exception as error:
+            message = f"Error getting element text: {error}"
+            error_code = 6
+
+            raise ErrorManager(message, error_code)
+
+    def get_element_text(self, path: str) -> Any:
+        """
+        Method responsible for getting element text.
+        """
+        try:
+            element = self.find_element(path)
+
+            return element.text
+        except ErrorManager:
+            return ""
+        except Exception as error:
+            message = f"Error getting element text: {error}"
+            error_code = 7
 
             raise ErrorManager(message, error_code)
 
@@ -62,7 +107,7 @@ class SeleniumHandler:
             self.browser.input_text(path, text)
         except Exception as error:
             message = f"Error inputing text: {error}"
-            error_code = 5
+            error_code = 8
 
             raise ErrorManager(message, error_code)
 
@@ -75,7 +120,7 @@ class SeleniumHandler:
             self.browser.open_available_browser(self.url)
         except Exception as error:
             message = f"Error opening browser: {error}"
-            error_code = 6
+            error_code = 9
 
             raise ErrorManager(message, error_code)
 
@@ -88,6 +133,6 @@ class SeleniumHandler:
             self.browser.select_from_list_by_value(path, option)
         except Exception as error:
             message = f"Error selecting an option: {error}"
-            error_code = 7
+            error_code = 10
 
             raise ErrorManager(message, error_code)
