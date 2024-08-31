@@ -37,7 +37,7 @@ if __name__ == "__main__":
 
             instance.execute_task()
             task_information.update(
-                {INSTANCE: instance, RESULTS: instance.results}
+                {INSTANCE: instance, RESULTS: instance.get_results()}
             )
         except ErrorManager as error:
             print(error.get_error_description())
