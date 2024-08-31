@@ -19,25 +19,8 @@ class TaskNewsDataExtraction(Task):
 
     def __init__(self, input_data: Dict) -> None:
         self.input_data = input_data
-        self.__url = "https://apnews.com/"
+        self.__url = "https://www.aljazeera.com/"
         self.__selenium_handler = SeleniumHandler(self.__url)
-
-    def _close_advertisement(self) -> None:
-        """
-        Method responsible for closing the advertisement
-        if it appears
-        """
-        try:
-            close_icon_path = (
-                "//div[@class='fancybox-overlay fancybox-overlay-fixed']"
-                + "//a[@title='Close' and @class='fancybox-item fancybox-close']"
-            )
-            close_icon_element = self.__selenium_handler.find_element(
-                close_icon_path
-            )
-            self.__selenium_handler.click_element(close_icon_element)
-        except ErrorManager:
-            print("Non-existent advertising")
 
     def _close_browser(self) -> None:
         """
@@ -57,8 +40,8 @@ class TaskNewsDataExtraction(Task):
         the search bar.
         """
         loupe_path = (
-            """//*[@id="Page-header-trending-zephr"]"""
-            + """/div[2]/div[3]/bsp-search-overlay/button"""
+            """//*[@id="root"]/div/div[1]/div[1]/div/"""
+            + """header/div[4]/div[2]/button"""
         )
         loupe_element = self.__selenium_handler.find_element(loupe_path)
         self.__selenium_handler.click_element(loupe_element)
@@ -68,15 +51,15 @@ class TaskNewsDataExtraction(Task):
         Method responsible for searching phrase.
         """
         text_bar_path = (
-            """//*[@id="Page-header-trending-zephr"]/div[2]"""
-            + """/div[3]/bsp-search-overlay/div/form/label/input"""
+            """//*[@id="root"]/div/div[1]/div[2]/div/"""
+            + """div/form/div[1]/input"""
         )
         text = self.input_data.get(self.SEARCH_PHRASE, "")
         self.__selenium_handler.input_text(text_bar_path, text)
 
         loupe_path = (
-            """//*[@id="Page-header-trending-zephr"]/div[2]/div[3]"""
-            + """/bsp-search-overlay/div/form/button"""
+            """//*[@id="root"]/div/div[1]/div[2]/div/div"""
+            + """/form/div[2]/button"""
         )
         loupe_element = self.__selenium_handler.find_element(loupe_path)
         self.__selenium_handler.click_element(loupe_element)
@@ -94,13 +77,9 @@ class TaskNewsDataExtraction(Task):
         try:
             self._open_browser()
             self.wait_for_page_to_load(2)
-            self._close_advertisement()
-            self.wait_for_page_to_load(2)
             self._open_search_bar()
             self.wait_for_page_to_load(2)
             self._searching_phrase()
-            self.wait_for_page_to_load(2)
-            self._close_advertisement()
             self.wait_for_page_to_load(2)
             self._close_browser()
             self._update_results(["results"])
