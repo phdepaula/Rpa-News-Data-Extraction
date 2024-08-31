@@ -10,7 +10,7 @@ class TaskRobotWorkItems(Task):
     """
 
     def __init__(self) -> None:
-        self.robot_keys = ["search_phrase", "filter", "sort_by"]
+        self.robot_keys = ["search_phrase", "sort_by"]
 
     def execute_task(self) -> None:
         """
