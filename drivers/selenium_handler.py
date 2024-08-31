@@ -78,3 +78,16 @@ class SeleniumHandler:
             error_code = 6
 
             raise ErrorManager(message, error_code)
+
+    def select_option(self, path: str, option: str) -> None:
+        """
+        Method responsible for selecting an
+        option from a list of values.
+        """
+        try:
+            self.browser.select_from_list_by_value(path, option)
+        except Exception as error:
+            message = f"Error selecting an option: {error}"
+            error_code = 7
+
+            raise ErrorManager(message, error_code)
