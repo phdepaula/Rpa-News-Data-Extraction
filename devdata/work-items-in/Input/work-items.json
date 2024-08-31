@@ -2,8 +2,7 @@
   {
     "payload": {
       "search_phrase": "Trump",
-      "filter": "Photo Galleries",
-      "sort_by": "Newest"
+      "sort_by": "Date"
     },
     "files": {
       "orders.xlsx": "orders.xlsx"
