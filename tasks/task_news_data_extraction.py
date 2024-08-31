@@ -10,7 +10,7 @@ from util.error_manager import ErrorManager
 class TaskNewsDataExtraction(Task):
     """
     Task to extract news data from the
-    website informed..
+    website informed.
     """
 
     SEARCH_PHRASE = "search_phrase"
