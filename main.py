@@ -40,11 +40,9 @@ if __name__ == "__main__":
                 input_data = tasks[ROBOT_WORK_ITEMS][RESULTS]
                 instance = TaskNewsDataExtraction(input_data)
             elif task == EXCEL_REPORT_GENERATOR:
-                input_data = (
-                    tasks[ROBOT_WORK_ITEMS][RESULTS]
-                    | tasks[NEWS_DATA_EXTRACTION][RESULTS]
-                )
-                instance = TaskExcelReportGenerator(input_data)
+                robot_data = tasks[ROBOT_WORK_ITEMS][RESULTS]
+                news_data = tasks[NEWS_DATA_EXTRACTION][RESULTS]
+                instance = TaskExcelReportGenerator(robot_data, news_data)
 
             instance.execute_task()
             task_information.update(
