@@ -1,60 +1,48 @@
-# Template: Python - Minimal
+# 📰 News Data Extraction
 
-This template leverages the new [Python framework](https://github.com/robocorp/robocorp), the [libraries](https://github.com/robocorp/robocorp/blob/master/docs/README.md#python-libraries) from to same project as well.
+Project of a robot responsible for extracting information from news on the [Aljazeera](https://www.aljazeera.com/) website and saving it in an Excel file.
 
-The template provides you with the basic structure of a Python project: logging out of the box and controlling your tasks without fiddling with the base Python stuff. The environment contains the most used libraries, so you do not have to start thinking about those right away. 
+The detailed information in the report will be:
+- Title.
+- Date.
+- Description.
+- Picture Filename.
+- Occurrence of Search Phrase in Title and Description.
+- Title and Description Have Monetary Value?
+- News Image.
 
-👉 Other templates are available as well via our tooling and on our [Portal](https://robocorp.com/portal/tag/template)
+## 📋 Prerequisites
 
-## Running
+Make sure you have the entire **environment configured** in **Robocorp**. If not, follow the steps recommended in the [Robocorp Documentation](https://robocorp.com/docs/courses/beginners-course-python/12-running-in-robocorp-cloud)
 
-#### VS Code
-1. Get [Robocorp Code](https://robocorp.com/docs/developer-tools/visual-studio-code/extension-features) -extension for VS Code.
-1. You'll get an easy-to-use side panel and powerful command-palette commands for running, debugging, code completion, docs, etc.
+Furthermore, for the **robot** to **work**, a **work item must be provided** to it as input data.
 
-#### Command line
+The Work Item is a json that needs to have the following parameters:
+- search_phrase.
+- sort_by.
+> Note that currently, there are only two types of sort_by available on the website: **date** and **relevance**.
 
-1. [Get RCC](https://github.com/robocorp/rcc?tab=readme-ov-file#getting-started)
-1. Use the command: `rcc run`
+Work Item Example:
+```json
+{
+    "search_phrase": "Donald Trump",
+    "sort_by": "Date"
+}
+```
 
-## Results
+> More information can be found at [Robocorp Work Items Documentation](https://rpaframework.org/libraries/robocorp_workitems/)
 
-🚀 After running the bot, check out the `log.html` under the `output` -folder.
 
-## Dependencies
+## ▶️ How to run
 
-We strongly recommend getting familiar with adding your dependencies in [conda.yaml](conda.yaml) to control your Python dependencies and the whole Python environment for your automation.
+The project can run via Robocorp or Vscode.
 
-<details>
-  <summary>🙋‍♂️ "Why not just pip install...?"</summary>
+### 🤖 Robocorp
 
-Think of [conda.yaml](conda.yaml) as an equivalent of the requirements.txt, but much better. 👩‍💻 With `conda.yaml`, you are not just controlling your PyPI dependencies; you control the complete Python environment, which makes things repeatable and easy.
+For robocorp, use this GitHub repository as a source to create your process.
 
-👉 You will probably need to run your code on another machine quite soon, so by using `conda.yaml`:
-- You can avoid `Works on my machine` -cases
-- You do not need to manage Python installations on all the machines
-- You can control exactly which version of Python your automation will run on 
-  - You'll also control the pip version to avoid dep. resolution changes
-- No need for venv, pyenv, ... tooling and knowledge sharing inside your team.
-- Define dependencies in conda.yaml, let our tooling do the heavy lifting.
-- You get all the content of [conda-forge](https://prefix.dev/channels/conda-forge) without any extra tooling
+### 💻 Vscode
 
-> Dive deeper with [these](https://github.com/robocorp/rcc/blob/master/docs/recipes.md#what-is-in-condayaml) resources.
+Get [Robocorp Code](https://robocorp.com/docs/visual-studio-code) extension for VS Code.
 
-</details>
-<br/>
-
-> The full power of [rpaframework](https://robocorp.com/docs/python/rpa-framework) -libraries is also available on Python as a backup while we implement the new Python libraries.
-
-## What now?
-
-🚀 Now, go get'em
-
-Start writing Python and remember that the AI/LLM's out there are getting really good and creating Python code specifically.
-
-👉 Try out [Robocorp ReMark 💬](https://chat.robocorp.com)
-
-For more information, do not forget to check out the following:
-- [Robocorp Documentation -site](https://robocorp.com/docs)
-- [Portal for more examples](https://robocorp.com/portal)
-- Follow our main [robocorp -repository](https://github.com/robocorp/robocorp) as it is the main location where we developed the libraries and the framework.
+Through it, you'll get an easy-to-use side panel and powerful command-palette commands for running, debugging, code completion, docs, etc.
