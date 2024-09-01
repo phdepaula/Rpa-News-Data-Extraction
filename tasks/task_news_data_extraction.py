@@ -103,7 +103,7 @@ class TaskNewsDataExtraction(Task):
         loupe_element = self.__selenium_handler.find_element(loupe_path)
         self.__selenium_handler.click_element(loupe_element)
 
-    def _searching_phrase(self) -> None:
+    def _searching_phrase(self, search_phrase: str) -> None:
         """
         Method responsible for searching phrase.
         """
@@ -111,8 +111,7 @@ class TaskNewsDataExtraction(Task):
             """//*[@id="root"]/div/div[1]/div[2]/div/"""
             + """div/form/div[1]/input"""
         )
-        text = self.input_data.get(self.SEARCH_PHRASE, "")
-        self.__selenium_handler.input_text(text_bar_path, text)
+        self.__selenium_handler.input_text(text_bar_path, search_phrase)
 
         loupe_path = (
             """//*[@id="root"]/div/div[1]/div[2]/div/div"""
@@ -126,10 +125,17 @@ class TaskNewsDataExtraction(Task):
         Method responsible for sorting news
         based on value provided.
         """
-        path = """//*[@id="search-sort-option"]"""
-        sort_by = self.input_data.get(self.SORT_BY, "").lower()
+        sort_by = self.input_data.get(self.SORT_BY, None)
 
-        self.__selenium_handler.select_option(path, sort_by)
+        if sort_by is not None:
+            try:
+                path = """//*[@id="search-sort-option"]"""
+                self.__selenium_handler.select_option(path, sort_by.lower())
+            except ErrorManager as error_manager:
+                print(
+                    "Unable to sort news: "
+                    + f"{error_manager.get_error_description()}"
+                )
 
     def _wait_for_page_to_load(self, seconds: int) -> None:
         """
@@ -146,13 +152,16 @@ class TaskNewsDataExtraction(Task):
             self._wait_for_page_to_load(2)
             self._open_search_bar()
             self._wait_for_page_to_load(2)
-            self._searching_phrase()
-            self._wait_for_page_to_load(2)
-            self._sort_news()
-            self._wait_for_page_to_load(2)
-            self._get_articles_information()
-            self._wait_for_page_to_load(2)
-            self._close_browser()
+
+            search_phrase = self.input_data.get(self.SEARCH_PHRASE, None)
+
+            if search_phrase is not None:
+                self._searching_phrase(search_phrase)
+                self._wait_for_page_to_load(2)
+                self._sort_news()
+                self._wait_for_page_to_load(2)
+                self._get_articles_information()
+                self._wait_for_page_to_load(2)
         except ErrorManager as error_manager:
             raise error_manager
         except Exception as error:
@@ -160,3 +169,5 @@ class TaskNewsDataExtraction(Task):
             error_code = 30
 
             raise ErrorManager(message, error_code)
+        finally:
+            self._close_browser()
