@@ -1,5 +1,6 @@
-import re
 import os
+import re
+
 from datetime import datetime
 from typing import Dict, List
 
@@ -7,6 +8,7 @@ from drivers.excel_generator import ExcelGenerator
 from tasks.task import Task
 
 from util.error_manager import ErrorManager
+
 import requests
 
 
