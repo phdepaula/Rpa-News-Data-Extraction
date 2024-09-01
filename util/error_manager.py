@@ -14,7 +14,7 @@ class ErrorManager(Exception):
         description
         """
         description = (
-            f"Message: {self.message}.\n" + f"Error Code: {self.error_code}."
+            f"Message: {self.message}. Error Code: {self.error_code}."
         )
 
         return description
