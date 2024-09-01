@@ -1,4 +1,5 @@
 import logging
+import os
 
 from util.error_manager import ErrorManager
 
@@ -13,7 +14,7 @@ class LogGenerator:
         """
         Initializes the logger configuration.
         """
-        self.log_file = "output/robot.log"
+        self.log_path = "output/robot.log"
         self.log_level = logging.INFO
         self.log = logging.getLogger(__name__)
         self._configure_log()
@@ -24,6 +25,9 @@ class LogGenerator:
         format and handlers.
         """
         try:
+            if os.path.isfile(self.log_path):
+                os.remove(self.log_path)
+
             self.log.setLevel(self.log_level)
 
             formatter = logging.Formatter(
@@ -33,7 +37,7 @@ class LogGenerator:
             console_handler = logging.StreamHandler()
             console_handler.setFormatter(formatter)
 
-            file_handler = logging.FileHandler(self.log_file)
+            file_handler = logging.FileHandler(self.log_path)
             file_handler.setFormatter(formatter)
 
             self.log.addHandler(console_handler)
