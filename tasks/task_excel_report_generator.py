@@ -1,5 +1,6 @@
+import re
 from datetime import datetime
-from typing import Dict
+from typing import Dict, List
 
 from drivers.excel_generator import ExcelGenerator
 from tasks.task import Task
@@ -13,22 +14,49 @@ class TaskExcelReportGenerator(Task):
     """
 
     SEARCH_PHRASE = "search_phrase"
+    SORT_BY = "sort_by"
     TITLE = "title"
     DESCRIPTION = "description"
     DATE = "date"
     IMAGE_SRC = "image_src"
+    COLUMNS = "columns"
 
-    def __init__(self, input_data: Dict) -> None:
+    def __init__(self, robot_data: Dict, news_data: Dict) -> None:
         super().__init__()
-        self.input_data = input_data
-        self.excel_generator = ExcelGenerator()
+        self.robot_data = robot_data
+        self.news_data = news_data
+        self.__excel_generator = ExcelGenerator()
+
+    def _check_if_contains_monetary_value(self, text: str) -> bool:
+        """
+        Method responsible for checking whether
+        the provided text contains any monetary value.
+
+        Possible formats: $11.1 | $111,111.11 | 11 dollars | 11 USD
+        """
+        standard = (
+            r"(\$\d{1,3}(,\d{3})*(\.\d{1,2})?)|"
+            r"(\d{1,3}(,\d{3})*(\.\d{1,2})?\s*dollars)|"
+            r"(USD\s*\d+)|"
+            r"(\d+\s*USD)"
+        )
+        return bool(re.search(standard, text))
+
+    def _count_number_of_occurrences(
+        self, text: str, search_phrase: str
+    ) -> int:
+        """
+        Method responsible for counting how many times the search_phrase
+        appears in the text.
+        """
+        return text.count(search_phrase)
 
     def _create_template(self) -> None:
         """
         Method responsible for creating the
         excel file.
         """
-        self.excel_generator.create_workbook()
+        self.__excel_generator.create_workbook()
 
         columns = [
             [
@@ -36,11 +64,49 @@ class TaskExcelReportGenerator(Task):
                 "Date",
                 "Description",
                 "Picture Filename",
-                "Count of Search Phrase",
-                "Title and Description Have Money?",
+                "Occurrence of Search Phrase in Title and Description",
+                "Title and Description Have Monetary Value?",
             ]
         ]
-        self.excel_generator.add_data(columns)
+        self.__excel_generator.add_data(columns)
+
+        self._update_results({self.COLUMNS: columns})
+
+    def _generate_report_data(self) -> List:
+        """
+        Method responsible for generating report data.
+        """
+        for key, data in self.news_data.items():
+            title = self._treat_text(data.get(self.TITLE, ""))
+            date = self._treat_date(data.get(self.DATE, ""))
+            description = self._treat_text(data.get(self.DESCRIPTION, ""))
+            picture_filename = data.get(self.IMAGE_SRC, "")
+
+            combined_text = title + " " + description
+            search_phrase = self.robot_data.get(self.SEARCH_PHRASE, None)
+
+            number_of_occurrences = (
+                self._count_number_of_occurrences(combined_text, search_phrase)
+                if search_phrase is not None
+                else 0
+            )
+            monetary_value = self._check_if_contains_monetary_value(
+                combined_text
+            )
+
+            data_result = [
+                [
+                    title,
+                    date,
+                    description,
+                    picture_filename,
+                    number_of_occurrences,
+                    monetary_value,
+                ]
+            ]
+
+            self.__excel_generator.add_data(data_result)
+            self._update_results({key: data_result})
 
     def _save_file(self) -> None:
         """
@@ -48,7 +114,36 @@ class TaskExcelReportGenerator(Task):
         """
         current_date = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
         path = f"output/report_news_{current_date}.xlsx"
-        self.excel_generator.save_workbook(path)
+        self.__excel_generator.save_workbook(path)
+
+    def _treat_date(self, date: str) -> str:
+        """
+        Method responsible for trating date.
+        Format: DD MMM AAAA
+        """
+        date_text = self._treat_text(date)
+
+        standard = r"(\d{1,2}\s*[A-Za-z]{3}\s*\d{4})"
+        match_standard = re.search(standard, date_text)
+
+        if match_standard:
+            date_matched = match_standard.group(1)
+
+            try:
+                new_date = datetime.strptime(date_matched, "%d %b %Y")
+
+                return new_date.strftime("%d %b %Y")
+            except ValueError:
+                return date_matched
+
+        return ""
+
+    def _treat_text(self, text: str) -> str:
+        """
+        Method responsible for removing
+        extra spaces.
+        """
+        return text.strip()
 
     def execute_task(self) -> None:
         """
@@ -56,6 +151,7 @@ class TaskExcelReportGenerator(Task):
         """
         try:
             self._create_template()
+            self._generate_report_data()
             self._save_file()
         except ErrorManager as error_manager:
             raise error_manager
