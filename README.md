@@ -13,7 +13,7 @@ The detailed information in the report will be:
 
 ## 📋 Prerequisites
 
-Make sure you have the entire **environment configured** in **Robocorp**. If not, follow the steps recommended in the [Robocorp Documentation](https://robocorp.com/docs/courses/beginners-course-python/12-running-in-robocorp-cloud)
+Make sure you have the entire **environment configured** in **Robocorp**. If not, follow the steps recommended in the [Robocorp Documentation](https://robocorp.com/docs/courses/beginners-course-python/12-running-in-robocorp-cloud).
 
 Furthermore, for the **robot** to **work**, a **work item must be provided** to it as input data.
 
@@ -30,7 +30,7 @@ Work Item Example:
 }
 ```
 
-> More information can be found at [Robocorp Work Items Documentation](https://rpaframework.org/libraries/robocorp_workitems/)
+> More information can be found at [Robocorp Work Items Documentation](https://rpaframework.org/libraries/robocorp_workitems/).
 
 
 ## ▶️ How to run
